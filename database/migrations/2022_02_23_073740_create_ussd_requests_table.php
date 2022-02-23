@@ -13,15 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('app_ussd_menus', function (Blueprint $table) {
+        Schema::create('ussd_requests', function (Blueprint $table) {
             $table->id();
-            $table->string('ussd_code', 50);
-            $table->unsignedBigInteger('app_id');
-            $table->foreign('app_id')
+            $table->string('user_input', 200);
+            $table->unsignedBigInteger('ussd_session_id');
+            $table->foreign('ussd_session_id')
                 ->references('id')
-                ->on('apps');
-            $table->string('root_menu_key', 180)
-                ->nullable();
+                ->on('ussd_sessions');
+            $table->string('ussd_menu_text', 280);
+            $table->string('response_message', 2800);
+            $table->smallInteger('status')->default(1);
             $table->string('created_by', 180)->default('admin');
             $table->string('updated_by', 180)->default('admin');
             $table->timestamps();
@@ -37,6 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('app_ussd_menus');
+        Schema::dropIfExists('ussd_requests');
     }
 };

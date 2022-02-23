@@ -15,13 +15,13 @@ return new class extends Migration
     {
         Schema::create('ussd_menus', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('app_ussd_menu');
+            $table->unsignedBigInteger('app_ussd_menu');
             $table->foreign('app_ussd_menu')
                 ->references('id')
                 ->on('app_ussd_menus');
-            $table->string('menu_key');
-            $table->string('next_menu_key');
-            $table->string('previous_menu_key');
+            $table->string('menu_key', 180)->unique();
+            $table->string('next_menu_key', 180);
+            $table->string('previous_menu_key', 180);
             $table->string('menu_text', 280);
             $table->smallInteger('is_final_menu')
                 ->default(0);
