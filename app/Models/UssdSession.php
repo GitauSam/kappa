@@ -12,6 +12,11 @@ class UssdSession extends BaseModel
         'next_ussd_menu_key',
         'previous_ussd_menu_key',
         'response_message',
+        'status',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
     ];
 
     public function ussdRequest()

@@ -2,9 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\App;
-use App\Models\AppUssdMenu;
-use App\Models\Organization;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -17,13 +14,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Organization::factory()
-                ->has(
-                    App::factory()
-                        ->has(
-                            AppUssdMenu::factory()
-                        )
-                    )
-                    ->create();
+        $this->call([
+            OrganizationSeeder::class,
+            AppSeeder::class,
+            AppUssdMenuSeeder::class,
+            UssdMenuSeeder::class,
+        ]);
     }
 }

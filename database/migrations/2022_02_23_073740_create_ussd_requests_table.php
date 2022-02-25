@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('ussd_requests', function (Blueprint $table) {
             $table->id();
-            $table->string('user_input', 200);
+            $table->string('user_input', 200)->nullable();
             $table->unsignedBigInteger('ussd_session_id');
             $table->foreign('ussd_session_id')
                 ->references('id')

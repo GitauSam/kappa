@@ -12,6 +12,11 @@ class UssdMenu extends BaseModel
         'menu_text',
         'menu_action',
         'is_final_menu',
+        'status',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
     ];
 
     public function appUssdMenu()

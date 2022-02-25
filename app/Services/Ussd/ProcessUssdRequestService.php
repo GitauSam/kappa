@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Ussd;
 
 interface ProcessUssdRequestService
 {
@@ -11,5 +11,5 @@ interface ProcessUssdRequestService
      * based on the values 
      * in the data array.
      */
-    public function execute($data): string;
+    public static function execute($data): string;
 }

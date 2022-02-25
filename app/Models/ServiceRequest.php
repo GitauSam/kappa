@@ -10,5 +10,10 @@ class ServiceRequest extends BaseModel
         'user_name',
         'user_national_id',
         'event_id',
+        'status',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
     ];
 }

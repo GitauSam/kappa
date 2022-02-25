@@ -9,5 +9,10 @@ class UssdRequest extends BaseModel
         'ussd_session_id',
         'ussd_menu_text',
         'response_message',
+        'status',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
     ];
 }

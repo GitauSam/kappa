@@ -11,7 +11,11 @@ class Organization extends BaseModel
 
     public $fillable = [
         'name',
-        'status'
+        'status',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
     ];
 
     public function app()

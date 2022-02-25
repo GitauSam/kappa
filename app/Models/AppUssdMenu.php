@@ -8,6 +8,11 @@ class AppUssdMenu extends BaseModel
         'ussd_code',
         'app_id',
         'root_menu_key',
+        'status',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
     ];
 
     public function app()
