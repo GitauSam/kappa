@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreign('organization_id')
                 ->references('id')
                 ->on('organizations');
+            $table->smallInteger('status');
             $table->string('created_by', 180)->default('admin');
             $table->string('updated_by', 180)->default('admin');
             $table->timestamps();

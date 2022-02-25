@@ -20,11 +20,13 @@ return new class extends Migration
                 ->references('id')
                 ->on('app_ussd_menus');
             $table->string('menu_key', 180)->unique();
-            $table->string('next_menu_key', 180);
-            $table->string('previous_menu_key', 180);
+            $table->string('next_menu_key', 180)->nullable();
+            $table->string('previous_menu_key', 180)->nullable();
             $table->string('menu_text', 280);
+            $table->string('menu_action', 200)->nullable();
             $table->smallInteger('is_final_menu')
                 ->default(0);
+            $table->smallInteger('status');
             $table->string('created_by', 180)->default('admin');
             $table->string('updated_by', 180)->default('admin');
             $table->timestamps();

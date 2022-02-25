@@ -22,6 +22,7 @@ return new class extends Migration
                 ->on('apps');
             $table->string('root_menu_key', 180)
                 ->nullable();
+            $table->smallInteger('status');
             $table->string('created_by', 180)->default('admin');
             $table->string('updated_by', 180)->default('admin');
             $table->timestamps();

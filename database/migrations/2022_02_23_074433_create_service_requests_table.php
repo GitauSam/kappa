@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('user_email')->nullable();
             $table->string('user_name')->nullable();
             $table->bigInteger('user_national_id')->nullable();
-            $table->bigInteger('event_id')->nullable();
+            $table->unsignedBigInteger('event_id')->nullable();
             $table->smallInteger('status')->default(0);
             $table->string('created_by', 180)->default('admin');
             $table->string('updated_by', 180)->default('admin');
