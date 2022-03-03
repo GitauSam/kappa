@@ -44,18 +44,45 @@ class ProcessUssdRequestUtilsImpl implements ProcessUssdRequestUtils
         Log::debug("UssdSession current_ussd_menu_key: " . $ussdSession->current_ussd_menu_key);
         Log::debug("UssdSession next_ussd_menu_key: " . $ussdSession->next_ussd_menu_key);
 
+        $menu = ProcessUssdRequestUtilsImpl::formatMenu($ussdMenu);
+
+        Log::debug("Formatted menu to be served: " . $menu);
+
         if ($ussdMenu->is_final_menu == 1) $ussdSession->status = 2;
         $ussdSession->previous_ussd_menu_key = $ussdSession->current_ussd_menu_key;
         $ussdSession->current_ussd_menu_key = $ussdMenu->menu_key;
         $ussdSession->next_ussd_menu_key = $ussdMenu->next_menu_key;
-        $ussdSession->response_message .= "Serving menu: {" . $ussdMenu->menu_text . "}.";
+        $ussdSession->response_message .= "Serving menu: {" . $menu . "}.";
         $ussdSession->save();
 
         $ussdRequest->ussd_menu_text = $ussdMenu->menu_text;
-        $ussdRequest->response_message = "Serving menu: {" . $ussdMenu->menu_text . "}.";
+        $ussdRequest->response_message = "Serving menu: {" . $menu . "}.";
         $ussdRequest->status = 1;
         $ussdRequest->save();
 
+        return $menu;
+    }
+
+    public static function formatMenu(UssdMenu $ussdMenu): string
+    {
+        if ($ussdMenu->is_parent != null && $ussdMenu->is_parent == 1)
+        {
+            $menu = $ussdMenu->menu_text;
+            $count = 0;
+
+            foreach($ussdMenu->ussdMenuOption as $ussdMenuOption)
+            {
+                if ($ussdMenuOption->status == 1) $menu .= "\n" . ++$count . ". " . $ussdMenuOption->option_menu_text;
+            }
+
+            return nl2br($menu);
+        }
+
         return $ussdMenu->menu_text;
+    }
+
+    public static function appendSessionData(UssdSession $ussdSession, string $field, $data)
+    {
+        $ussdSession->$field = $data;
     }
 }

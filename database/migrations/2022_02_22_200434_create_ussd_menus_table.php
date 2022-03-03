@@ -24,8 +24,11 @@ return new class extends Migration
             $table->string('previous_menu_key', 180)->nullable();
             $table->string('menu_text', 280);
             $table->string('menu_action', 200)->nullable();
+            $table->string('menu_session_field', 200)->nullable();
             $table->smallInteger('is_final_menu')
                 ->default(0);
+            $table->smallInteger('is_parent')->nullable();
+            $table->smallInteger('is_interactive')->default(0);
             $table->smallInteger('status');
             $table->string('created_by', 180)->default('admin');
             $table->string('updated_by', 180)->default('admin');

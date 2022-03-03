@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             AppSeeder::class,
             AppUssdMenuSeeder::class,
             UssdMenuSeeder::class,
+            UssdMenuOptionSeeder::class,
         ]);
     }
 }

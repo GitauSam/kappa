@@ -30,6 +30,23 @@ class ProcessUssdRequestServiceImpl implements ProcessUssdRequestService
             if ($ussdSession != null && !ProcessUssdRequestUtilsImpl::checkIfSessionIsExpired($ussdSession->updated_at, 5)) 
             {
                 Log::debug("Breakpoint 2");
+
+                $currentUssdMenu = UssdMenu::where('menu_key', $ussdSession->current_ussd_menu_key)
+                                                ->first();
+
+                if ($currentUssdMenu->is_parent && $currentUssdMenu->is_interactive)
+                {
+                    // Get appropriate child menu action from input
+                } else if ($currentUssdMenu->is_interactive == 1 && $currentUssdMenu->menu_session_field != null && !empty($currentUssdMenu->menu_session_field))
+                {
+                    if ($currentUssdMenu->menu_action != null && !empty($currentUssdMenu->menu_action)) {
+                        $menuAction = $currentUssdMenu->menu_action($data['user_input']);
+                        Log::debug('Menu action: ' . $menuAction);
+                        ProcessUssdRequestUtilsImpl::$menuAction;
+                    }
+                    ProcessUssdRequestUtilsImpl::appendSessionData($ussdSession, $currentUssdMenu->menu_session_field, $data['user_input']);
+                }
+
                 // Get next menu
                 $nextUssdMenu = UssdMenu::where('menu_key', $ussdSession->next_ussd_menu_key)
                                             ->where('status', 1)

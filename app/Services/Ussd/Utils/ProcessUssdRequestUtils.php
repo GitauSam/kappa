@@ -49,4 +49,18 @@ interface ProcessUssdRequestUtils
      * Updates session and request details with current state of the process 
      */
     public static function serveMenu(UssdSession $ussdSession, UssdMenu $ussdMenu, UssdRequest $ussdRequest): string;
+
+    /**
+     * @param UssdMenu $ussdMenu - Menu to be served
+     * 
+     * Formats menu to be served
+     */
+    public static function formatMenu(UssdMenu $ussdMenu): string;
+
+    /**
+     * @param UssdSession $ussdSession
+     * 
+     * Appends data to session fields
+     */
+    public static function appendSessionData(UssdSession $ussdSession, string $field ,$data);
 }
