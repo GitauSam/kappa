@@ -21,6 +21,7 @@ return new class extends Migration
                     ->on('ussd_menus');
             $table->string('option_menu_key', 180)->unique();
             $table->string('option_menu_text', 280);
+            $table->string('option_menu_next_menu_key', 180)->nullable();
             $table->string('option_menu_action', 200)->nullable();
             $table->string('option_menu_session_field', 50)->nullable();
             $table->smallInteger('is_menu_option_interactive')->default(0);

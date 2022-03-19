@@ -83,6 +83,13 @@ class ProcessUssdRequestUtilsImpl implements ProcessUssdRequestUtils
 
     public static function appendSessionData(UssdSession $ussdSession, string $field, $data)
     {
+        Log::debug("Attempting to append: " . $data . " to field: " . $field);
         $ussdSession->$field = $data;
+    }
+
+    public static function exitMenu(UssdSession $ussdSession, string $exitMenuKey): void
+    {
+        $ussdSession->next_ussd_menu_key = $exitMenuKey;
+        $ussdSession->save();
     }
 }

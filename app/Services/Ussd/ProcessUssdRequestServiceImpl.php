@@ -22,37 +22,81 @@ class ProcessUssdRequestServiceImpl implements ProcessUssdRequestService
                                         ->latest()
                                         ->first();
 
-            Log::debug("Breakpoint 1");
-            Log::debug(gettype($ussdSession));
-            Log::debug($ussdSession);
-
             // Confirm USSD session exists and has not expired
             if ($ussdSession != null && !ProcessUssdRequestUtilsImpl::checkIfSessionIsExpired($ussdSession->updated_at, 5)) 
             {
-                Log::debug("Breakpoint 2");
-
                 $currentUssdMenu = UssdMenu::where('menu_key', $ussdSession->current_ussd_menu_key)
                                                 ->first();
 
                 if ($currentUssdMenu->is_parent && $currentUssdMenu->is_interactive)
                 {
+                    Log::debug("Checking selected menu option");
                     // Get appropriate child menu action from input
+                    foreach($currentUssdMenu->ussdMenuOption as $index => $ussdMenuOption) {
+                        Log::debug("Current index: " . $index);
+                        if ($index + 1 == $data['user_input'])
+                        {
+                            Log::debug("Current index == " . $index + 1);
+                            $optionMenuAction = $ussdMenuOption->option_menu_action;
+
+                            if (
+                                $optionMenuAction != null &&
+                                !empty($optionMenuAction) &&
+                                is_callable("App\Services\Ussd\Utils\ProcessUssdRequestUtilsImpl::" . $optionMenuAction)
+                            ) 
+                            {
+                                call_user_func_array(
+                                    [
+                                        "App\Services\Ussd\Utils\ProcessUssdRequestUtilsImpl", $optionMenuAction
+                                    ], 
+                                    match ($optionMenuAction) 
+                                    {
+                                        'appendSessionData' => [
+                                            $ussdSession,
+                                            $ussdMenuOption->option_menu_session_field,
+                                            $data['user_input']
+                                        ],
+                                        'exitMenu' => [
+                                            $ussdSession,
+                                            $ussdMenuOption->option_menu_next_menu_key
+                                        ],
+                                        default => [], 
+                                    }
+                                );
+                            }
+
+                            break;
+                        }
+                    }
                 } else if ($currentUssdMenu->is_interactive == 1 && $currentUssdMenu->menu_session_field != null && !empty($currentUssdMenu->menu_session_field))
                 {
                     if ($currentUssdMenu->menu_action != null && !empty($currentUssdMenu->menu_action)) {
-                        $menuAction = $currentUssdMenu->menu_action($data['user_input']);
-                        Log::debug('Menu action: ' . $menuAction);
-                        ProcessUssdRequestUtilsImpl::$menuAction;
+                        $menuAction = $currentUssdMenu->menu_action;
+
+                        if (is_callable("App\Services\Ussd\Utils\ProcessUssdRequestUtilsImpl::" . $menuAction)) 
+                        {
+                            call_user_func_array(
+                                [ 
+                                    "App\Services\Ussd\Utils\ProcessUssdRequestUtilsImpl", $menuAction
+                                ], 
+                                match ($menuAction) 
+                                {
+                                    'appendSessionData' => [
+                                        $ussdSession,
+                                        $currentUssdMenu->menu_session_field,
+                                        $data['user_input']
+                                    ],
+                                    default => [], 
+                                }
+                            );
+                        }
                     }
-                    ProcessUssdRequestUtilsImpl::appendSessionData($ussdSession, $currentUssdMenu->menu_session_field, $data['user_input']);
                 }
 
                 // Get next menu
                 $nextUssdMenu = UssdMenu::where('menu_key', $ussdSession->next_ussd_menu_key)
                                             ->where('status', 1)
                                             ->first();
-
-                Log::debug($nextUssdMenu);
 
                 // Create new USSD request
                 $ussdRequest = new UssdRequest();
@@ -77,18 +121,14 @@ class ProcessUssdRequestServiceImpl implements ProcessUssdRequestService
                 }
             } else 
             {
-                Log::debug("Breakpoint 3");
                 // Create new USSD session
                 $ussdSession = new UssdSession();
                 $ussdSession->ussd_code = $data['ussd_code'];
                 $ussdSession->ussd_msisdn = $data['user_msisdn'];
                 $ussdSession->response_message = "Initiated new USSD session for msisdn {"
                     . $data['user_msisdn'] ."}.";
-                Log::debug("Breakpoint 3.1");
                 $ussdSession->status = 1;
-                Log::debug("Breakpoint 3.2");
                 $ussdSession->save();
-                Log::debug("Breakpoint 3.3");
 
                 // Get app associate with USSD code
                 $appUssdMenu = AppUssdMenu::where('ussd_code', $data['ussd_code'])
@@ -99,14 +139,10 @@ class ProcessUssdRequestServiceImpl implements ProcessUssdRequestService
                 // Confirm if app exists
                 if ($appUssdMenu != null)
                 {
-                    Log::debug("Breakpoint 3.4");
                     // Get menu(s) associated with app
                     $ussdMenu = UssdMenu::where('menu_key', $appUssdMenu->root_menu_key)
                                         ->where('status', 1)
                                         ->first();
-
-                    Log::debug("Ussd Menu status: " . $ussdMenu->status);
-                    Log::debug(gettype($ussdMenu));
 
                     // Create new USSD request
                     $ussdRequest = new UssdRequest();
@@ -140,8 +176,7 @@ class ProcessUssdRequestServiceImpl implements ProcessUssdRequestService
             }
         } catch (\Throwable $th) 
         {
-            Log::debug("Breakpoint 4");
-            Log::debug($th->getMessage());
+            Log::channel('menu-error')->error($th->getMessage(), ['file' => __FILE__, 'line' => __LINE__]);
             return "Error occurred. Please contact support";
         }
     }

@@ -58,9 +58,16 @@ interface ProcessUssdRequestUtils
     public static function formatMenu(UssdMenu $ussdMenu): string;
 
     /**
-     * @param UssdSession $ussdSession
+     * @param UssdSession $ussdSession - Current ussd session
      * 
      * Appends data to session fields
      */
     public static function appendSessionData(UssdSession $ussdSession, string $field ,$data);
+
+    /**
+     * @param UssdSession $ussdSession - Current ussd session
+     * 
+     * Exits menu and closes menu session
+     */
+    public static function exitMenu(UssdSession $ussdSession, string $exitMenuKey): void;
 }

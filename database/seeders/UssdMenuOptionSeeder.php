@@ -19,7 +19,7 @@ class UssdMenuOptionSeeder extends Seeder
             'ussd_menu_id' => 1,
             'option_menu_key' => 'welcome_menu_continue_option',
             'option_menu_text' => 'Continue',
-            'option_menu_action' => 'serveMenu',
+            'option_menu_next_menu_key' => 'kappa_thankyou_menu',
             'is_menu_option_interactive' => 1,
             'status' => 1,
         ]);
