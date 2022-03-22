@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('ussd_msisdn', 30);
             $table->string('user_full_name', 50)->nullable();
             $table->string('user_email', 50)->nullable();
+            $table->string('user_identification_type', 30)->nullable();
             $table->string('user_identification_number', 30)->nullable();
             $table->string('response_message', 2800);
             $table->string('current_ussd_menu_key')->nullable();

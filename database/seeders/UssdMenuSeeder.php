@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\UssdMenu;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class UssdMenuSeeder extends Seeder
@@ -71,7 +70,7 @@ class UssdMenuSeeder extends Seeder
             'app_ussd_menu' => 1,
             'menu_key' => 'kappa_idnumber_menu',
             'next_menu_key' => 'kappa_thankyou_menu',
-            'previous_menu_key' => $emailMenu->menu_key,
+            'previous_menu_key' => $idTypeMenu->menu_key,
             'menu_text' => 'Please enter your ID number.',
             'menu_action' => 'appendSessionData',
             'menu_session_field' => 'user_identification_number',
@@ -85,6 +84,14 @@ class UssdMenuSeeder extends Seeder
             'menu_key' => 'kappa_thankyou_menu',
             'previous_menu_key' => $idnumberMenu->menu_key,
             'menu_text' => 'Thank you. Your request is being processed.',
+            'is_final_menu' => 1,
+            'status' => 1,
+        ]);
+
+        $exitMenu = UssdMenu::create([
+            'app_ussd_menu' => 1,
+            'menu_key' => 'kappa_exit_menu',
+            'menu_text' => 'Thank you for your interest.',
             'is_final_menu' => 1,
             'status' => 1,
         ]);

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\App;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class AppSeeder extends Seeder
@@ -16,5 +15,11 @@ class AppSeeder extends Seeder
     public function run()
     {
         App::factory()->create();
+
+        App::create([
+            'name' => 'gmea_ussd',
+            'organization_id' => 2,
+            'status' => 1,
+        ]);
     }
 }
