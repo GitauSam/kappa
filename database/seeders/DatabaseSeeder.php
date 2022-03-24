@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Database\Seeders\Gmea\GmeaUssdMenuOptionSeeder;
+use Database\Seeders\Gmea\GmeaUssdMenuSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,6 +21,8 @@ class DatabaseSeeder extends Seeder
             AppUssdMenuSeeder::class,
             UssdMenuSeeder::class,
             UssdMenuOptionSeeder::class,
+            GmeaUssdMenuSeeder::class,
+            GmeaUssdMenuOptionSeeder::class,
         ]);
     }
 }

@@ -28,6 +28,8 @@ class ProcessUssdRequestServiceImpl implements ProcessUssdRequestService
                 $currentUssdMenu = UssdMenu::where('menu_key', $ussdSession->current_ussd_menu_key)
                                                 ->first();
 
+                $nextUssdMenuFromOption = null;
+
                 if ($currentUssdMenu->is_parent && $currentUssdMenu->is_interactive)
                 {
                     Log::debug("Checking selected menu option");
@@ -65,6 +67,8 @@ class ProcessUssdRequestServiceImpl implements ProcessUssdRequestService
                                 );
                             }
 
+                            $nextUssdMenuFromOption = $ussdMenuOption->option_menu_next_menu_key;
+
                             break;
                         }
                     }
@@ -94,9 +98,12 @@ class ProcessUssdRequestServiceImpl implements ProcessUssdRequestService
                 }
 
                 // Get next menu
-                $nextUssdMenu = UssdMenu::where('menu_key', $ussdSession->next_ussd_menu_key)
-                                            ->where('status', 1)
-                                            ->first();
+                $nextUssdMenu = UssdMenu::where(
+                                        'menu_key', 
+                                        $nextUssdMenuFromOption ?? $ussdSession->next_ussd_menu_key
+                                    )
+                                    ->where('status', 1)
+                                    ->first();
 
                 // Create new USSD request
                 $ussdRequest = new UssdRequest();
@@ -177,7 +184,7 @@ class ProcessUssdRequestServiceImpl implements ProcessUssdRequestService
         } catch (\Throwable $th) 
         {
             Log::channel('menu-error')->error($th->getMessage(), ['file' => __FILE__, 'line' => __LINE__]);
-            return "Error occurred. Please contact support";
+            return "Error occurred. Please contact support\n";
         }
     }
 }

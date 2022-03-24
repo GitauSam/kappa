@@ -75,7 +75,7 @@ class ProcessUssdRequestUtilsImpl implements ProcessUssdRequestUtils
                 if ($ussdMenuOption->status == 1) $menu .= "\n" . ++$count . ". " . $ussdMenuOption->option_menu_text;
             }
 
-            return nl2br($menu);
+            return nl2br($menu . "\n");
         }
 
         return $ussdMenu->menu_text;
